@@ -1985,10 +1985,29 @@
                 left: 88% !important;
             }
 
+            .btn-lessons {
+                right: 5% !important;
+                left: auto !important;
+                top: 20% !important;
+                transform: scale(0.8) translate(0, -50%);
+            }
+            .btn-stories {
+                right: -5% !important;
+                left: auto !important;
+                top: 35% !important;
+                transform: scale(0.8) translate(0, -50%);
+            }
             .btn-exams {
                 right: -2% !important;
-                top: 30% !important;
-                transform: scale(0.9) translate(-50%, -50%);
+                left: auto !important;
+                top: 50% !important;
+                transform: scale(0.9) translate(0, -50%);
+            }
+            .btn-guest {
+                right: 8% !important;
+                left: auto !important;
+                top: 65% !important;
+                transform: scale(0.8) translate(0, -50%);
             }
 
             .name-plate {
@@ -2007,10 +2026,10 @@
                 width: auto;
                 min-width: 60px;
             }
-
-            .nav-icon {
-                width: calc(var(--u) * 3);
-                height: calc(var(--u) * 3);
+            
+            .nav-item .nav-icon {
+                width: calc(var(--u) * 5);
+                height: calc(var(--u) * 5);
             }
 
             .dialogue-box {
@@ -2043,8 +2062,7 @@
                 border-radius: 12px;
                 backdrop-filter: blur(8px);
                 box-sizing: border-box;
-                margin-top: 320px;
-                /* Space for character head */
+                margin-top: 360px; /* Increased space to prevent quote overlap */
             }
 
             .profile-crest {
@@ -2076,6 +2094,7 @@
                 text-align: center;
                 font-size: 1.8rem;
                 width: 90%;
+                z-index: 10;
             }
 
             .quote-audio {
@@ -2155,16 +2174,35 @@
             }
 
             /* Adjust floating buttons for super narrow screen */
-            #btn-mail { top: 15% !important; left: 10% !important; transform: scale(0.85); }
-            #btn-present { top: 28% !important; left: 10% !important; transform: scale(0.85); }
-            #btn-tools { top: 41% !important; left: 10% !important; transform: scale(0.85); }
-            #btn-settings { top: 8% !important; left: 70% !important; transform: scale(0.85); }
-            #btn-fullscreen { top: 8% !important; left: 88% !important; transform: scale(0.85); }
+            #btn-mail { top: 15% !important; left: 8% !important; transform: scale(0.7); }
+            #btn-present { top: 25% !important; left: 8% !important; transform: scale(0.7); }
+            #btn-tools { top: 35% !important; left: 8% !important; transform: scale(0.7); }
+            #btn-settings { top: 5% !important; left: 70% !important; transform: scale(0.7); }
+            #btn-fullscreen { top: 5% !important; left: 85% !important; transform: scale(0.7); }
 
-            .btn-exams {
-                transform: scale(0.65) translate(-50%, -50%);
-                top: 25% !important;
+            .btn-lessons {
+                transform: scale(0.55) translate(0, -50%);
+                top: 20% !important;
                 right: -10% !important;
+                left: auto !important;
+            }
+            .btn-stories {
+                transform: scale(0.55) translate(0, -50%);
+                top: 35% !important;
+                right: -15% !important;
+                left: auto !important;
+            }
+            .btn-exams {
+                transform: scale(0.65) translate(0, -50%);
+                top: 50% !important;
+                right: -15% !important;
+                left: auto !important;
+            }
+            .btn-guest {
+                transform: scale(0.55) translate(0, -50%);
+                top: 65% !important;
+                right: -5% !important;
+                left: auto !important;
             }
 
             .name-plate {
@@ -2176,13 +2214,19 @@
             }
 
             .bottom-nav {
-                flex-wrap: wrap; /* allow wrapping if needed */
+                flex-wrap: wrap;
                 bottom: calc(var(--u) * 3);
             }
             
             .nav-item {
                 font-size: 0.75rem;
-                min-width: 50px;
+                min-width: 45px;
+                gap: calc(var(--u) * 0.4);
+            }
+            
+            .nav-item .nav-icon {
+                width: calc(var(--u) * 8);
+                height: calc(var(--u) * 8);
             }
 
             .dialogue-box {
@@ -2192,15 +2236,17 @@
 
             /* Profile page portrait */
             .profile-right {
-                height: 300px; /* shorter image */
+                height: 400px;
             }
             .profile-left {
-                margin-top: 220px;
+                margin-top: 260px;
                 padding: 20px 10px;
             }
             .profile-quote {
-                top: 180px;
-                font-size: 1.4rem;
+                top: 170px;
+                font-size: 1.3rem;
+                z-index: 10;
+                width: 95%;
             }
 
             /* Magic page */
