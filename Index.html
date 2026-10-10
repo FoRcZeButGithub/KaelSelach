@@ -1,0 +1,2845 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kael Selach - Profile</title>
+    <style>
+        /* ตั้งค่าพื้นฐาน */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@700&family=Prompt:wght@300;400;600&display=swap');
+
+        @font-face {
+            font-family: 'EkkamaiVibe-Heavy';
+            src: url('assets/EkkamaiVibe-Heavy.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --gold: #d4af37;
+            --dark-bg: #1a1a24;
+            --panel-bg: rgba(20, 20, 25, 0.85);
+            --font-head: 'Cinzel', serif;
+            --font-text: 'Prompt', sans-serif;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            background-color: #0d0d12;
+            color: #fff;
+            font-family: var(--font-text);
+            overflow-x: hidden;
+        }
+
+        /* =========================================
+           ส่วนที่ 1: หน้า Homescreen สไตล์ Twisted Wonderland
+           (--u = 1% ของความสูงจอ แบบเกม จะย่อ/ขยายตามจอ)
+           ========================================= */
+        #game-homescreen {
+            --u: min(1vh, 0.5vw);
+            --cream: #f4efdf;
+            --ring: #dcb365;
+            --ring-dark: #624b27;
+            --pink: #ff55a3;
+            --cyan: #40e0d0;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #08111f;
+            user-select: none;
+        }
+
+        .hs-bg {
+            position: absolute;
+            inset: -2%;
+            background: url('assets/bg-hall.jpg') center / cover no-repeat;
+            filter: brightness(1.1) contrast(1.05) saturate(1.2) blur(0.5);
+            animation: bgDrift 40s ease-in-out infinite alternate;
+        }
+
+        .hs-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 45%, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.35) 85%);
+        }
+
+        @keyframes bgDrift {
+            from {
+                transform: scale(1) translateX(0);
+            }
+
+            to {
+                transform: scale(1.04) translateX(-1%);
+            }
+        }
+
+        .hs-btn {
+            position: absolute;
+            z-index: 10;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(.3, 1.6, .5, 1), filter 0.25s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hs-btn:hover {
+            filter: drop-shadow(0 0 calc(var(--u) * 1.6) rgba(243, 154, 208, 0.75));
+        }
+
+        .hs-btn:active {
+            filter: brightness(0.85);
+        }
+
+        .hs-btn svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ---------- ตัวละคร ---------- */
+        .character-wrap {
+            position: absolute;
+            left: 47%;
+            bottom: 0;
+            height: 100%;
+            transform: translateX(-50%);
+            z-index: 5;
+            display: flex;
+            align-items: flex-end;
+            animation: breathe 5s ease-in-out infinite;
+            transform-origin: bottom center;
+            cursor: pointer;
+        }
+
+        .character-sprite {
+            height: 100%;
+            aspect-ratio: 1 / 1.5;
+            position: relative;
+            transition: transform 0.1s ease-out;
+        }
+
+        .character-sprite::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('assets/kael.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom center;
+            filter: drop-shadow(0 0 calc(var(--u) * 2) rgba(0, 0, 0, 0.45));
+            pointer-events: none;
+        }
+
+        /* ===== Global Watermark ===== */
+        .global-watermark {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 99999;
+            pointer-events: none;
+        }
+
+        .global-watermark::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('assets/mbwatermark.png');
+            background-repeat: repeat;
+            background-size: 200px;
+            --wm-opacity: 0.15;
+            opacity: var(--wm-opacity);
+            pointer-events: none;
+        }
+
+        .character-fallback {
+            display: none;
+            width: calc(var(--u) * 42);
+            height: 100%;
+            border: 2px dashed rgba(255, 255, 255, 0.35);
+            border-bottom: none;
+            border-radius: 45% 45% 0 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: calc(var(--u) * 2.6);
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to top, rgba(20, 30, 50, 0.5), rgba(20, 30, 50, 0.1));
+        }
+
+        .character-wrap.missing .character-sprite {
+            display: none;
+        }
+
+        .character-wrap.missing .character-fallback {
+            display: flex;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scaleY(1);
+            }
+
+            50% {
+                transform: translateX(-50%) scaleY(1.008);
+            }
+        }
+
+        /* ---------- ปุ่มวงกลมสีครีม (ซ้าย / ขวาบน / ล่าง) ---------- */
+        .circle-btn {
+            width: calc(var(--u) * 10);
+            height: calc(var(--u) * 10);
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #fffdf6, var(--cream) 60%, #e3dccb);
+            box-shadow:
+                0 0 0 calc(var(--u) * 0.45) var(--ring),
+                0 0 0 calc(var(--u) * 0.75) var(--ring-dark),
+                0 calc(var(--u) * 0.6) calc(var(--u) * 1.5) rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2a2a2e;
+            transform: translate(-50%, -50%);
+        }
+
+        .circle-btn svg {
+            width: 58%;
+            height: 58%;
+        }
+
+        .circle-btn:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* ลูกศรประดับด้านซ้ายของไอคอนซ้ายมือ */
+        .left-icon::before {
+            content: '';
+            position: absolute;
+            right: 104%;
+            top: 50%;
+            width: calc(var(--u) * 3.5);
+            height: calc(var(--u) * 0.35);
+            background: linear-gradient(to right, transparent, var(--ring));
+            transform: translateY(-50%);
+        }
+
+        .left-icon::after {
+            content: '';
+            position: absolute;
+            right: calc(104% + var(--u) * 2.4);
+            top: 50%;
+            width: calc(var(--u) * 1.2);
+            height: calc(var(--u) * 1.2);
+            border-left: calc(var(--u) * 0.35) solid var(--ring);
+            border-bottom: calc(var(--u) * 0.35) solid var(--ring);
+            transform: translateY(-50%) rotate(225deg);
+        }
+
+        /* ---------- Tooltip ภาษาไทย ---------- */
+        [data-tip]::marker {
+            content: none;
+        }
+
+        .tip {
+            position: absolute;
+            left: 50%;
+            top: 108%;
+            transform: translateX(-50%) translateY(-4px);
+            white-space: nowrap;
+            font-size: calc(var(--u) * 2.2);
+            background: rgba(10, 10, 14, 0.85);
+            color: #fff;
+            padding: calc(var(--u) * 0.5) calc(var(--u) * 1.4);
+            border-radius: 999px;
+            border: 1px solid var(--ring);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+            font-family: var(--font-text);
+        }
+
+        .hs-btn:hover .tip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ให้ Tooltip ของไอคอนฝั่งซ้ายแสดงทางขวาแทนที่จะอยู่ข้างล่าง */
+        .left-icon .tip {
+            left: 115%;
+            top: 50%;
+            transform: translateY(-50%) translateX(-8px);
+        }
+
+        .left-icon:hover .tip {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* ---------- ป้ายชื่อมุมซ้ายบน (แทน Rank) ---------- */
+        .name-plate {
+            position: absolute;
+            top: calc(var(--u) * 3);
+            left: 11%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: calc(var(--u) * 1.5);
+            padding: calc(var(--u) * 1) calc(var(--u) * 4) calc(var(--u) * 1) calc(var(--u) * 2.5);
+            background: linear-gradient(to right, rgba(12, 12, 16, 0.92), rgba(12, 12, 16, 0.75));
+            border-top: calc(var(--u) * 0.3) solid var(--ring);
+            border-bottom: calc(var(--u) * 0.3) solid var(--ring);
+            clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 3% 50%);
+        }
+
+        .name-plate strong {
+            font-family: 'Cinzel Decorative', var(--font-head);
+            font-size: calc(var(--u) * 3.4);
+            color: #fff;
+            letter-spacing: 0.05em;
+        }
+
+        .name-plate span {
+            font-size: calc(var(--u) * 2.2);
+            color: var(--ring);
+        }
+
+        /* ---------- กรอบเมนูวงรีหรูหรา (Lessons / Stories / Exams) ---------- */
+        .ornate {
+            transform: translate(-50%, -50%);
+            animation: floaty 4s ease-in-out infinite;
+        }
+
+        .ornate:hover {
+            animation-play-state: paused;
+            transform: translate(-50%, -50%) scale(1.07);
+        }
+
+        @keyframes floaty {
+
+            0%,
+            100% {
+                margin-top: 0;
+            }
+
+            50% {
+                margin-top: calc(var(--u) * -0.8);
+            }
+        }
+
+        .ornate-frame {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            padding: calc(var(--u) * 1.2);
+            box-sizing: border-box;
+            background:
+                conic-gradient(from 0deg, #cba254, #fbf2c2, #cba254, #876228, #cba254, #fbf2c2, #cba254);
+            box-shadow:
+                0 0 0 calc(var(--u) * 0.4) #1a150c,
+                0 calc(var(--u) * 1) calc(var(--u) * 2.5) rgba(0, 0, 0, 0.65);
+        }
+
+        .ornate-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-sizing: border-box;
+            border: calc(var(--u) * 0.4) solid #8c8c8c;
+            background-color: #1a1a1a;
+            background-image:
+                linear-gradient(45deg, #0a0a0a 25%, transparent 25%, transparent 75%, #0a0a0a 75%),
+                linear-gradient(45deg, #0a0a0a 25%, transparent 25%, transparent 75%, #0a0a0a 75%);
+            background-size: calc(var(--u) * 4) calc(var(--u) * 4);
+            background-position: 0 0, calc(var(--u) * 2) calc(var(--u) * 2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 calc(var(--u) * 0.5) #111, inset 0 0 calc(var(--u) * 4) rgba(0, 0, 0, 0.95);
+            overflow: hidden;
+        }
+
+        .ornate-crown {
+            position: absolute;
+            top: calc(var(--u) * -2.6);
+            left: 50%;
+            width: 34%;
+            transform: translateX(-50%);
+            fill: #d8c48e;
+            stroke: #3a321f;
+            stroke-width: 0.8;
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+        }
+
+        .menu-title {
+            font-family: 'Cinzel Decorative', var(--font-head);
+            color: #ff66b2;
+            font-size: calc(var(--u) * 3.6);
+            letter-spacing: 0.06em;
+            line-height: 1;
+            text-shadow: 1px 1px 0 #111, -1px -1px 0 #111, 1px -1px 0 #111, -1px 1px 0 #111, 0 3px 0 #111, 0 4px 4px rgba(0, 0, 0, 0.8);
+            -webkit-text-stroke: 0.5px #111;
+        }
+
+        .menu-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: calc(var(--u) * 0.8) 0 calc(var(--u) * 0.4);
+            color: #f4f1ea;
+            width: 52%;
+            aspect-ratio: 1.3;
+        }
+
+        .menu-icon svg {
+            width: 60%;
+            height: 100%;
+            stroke-width: 1.3;
+        }
+
+        /* วงเล็บ [ ] สีทอง */
+        .menu-icon::before,
+        .menu-icon::after {
+            content: '';
+            position: absolute;
+            top: 5%;
+            bottom: 5%;
+            width: 14%;
+            border: calc(var(--u) * 0.3) solid var(--ring);
+        }
+
+        .menu-icon::before {
+            left: 0;
+            border-right: none;
+        }
+
+        .menu-icon::after {
+            right: 0;
+            border-left: none;
+        }
+
+        .menu-sub {
+            font-size: calc(var(--u) * 1.6);
+            color: #ff66b2;
+            letter-spacing: 0.1em;
+            -webkit-text-stroke: 0.5px #111;
+            text-shadow: 1px 1px 0 #111;
+        }
+
+        .btn-lessons {
+            left: 68.5%;
+            top: 29%;
+            width: calc(var(--u) * 27);
+            height: calc(var(--u) * 35);
+        }
+
+        .btn-stories {
+            left: 84%;
+            top: 37%;
+            width: calc(var(--u) * 27);
+            height: calc(var(--u) * 35);
+            animation-delay: -1.3s;
+        }
+
+        .btn-exams {
+            left: 72.5%;
+            top: 64%;
+            width: calc(var(--u) * 18);
+            height: calc(var(--u) * 24);
+            animation-delay: -2.6s;
+        }
+
+        .btn-exams .menu-title {
+            font-size: calc(var(--u) * 2.8);
+        }
+
+        .btn-exams .ornate-crown {
+            top: calc(var(--u) * -2);
+        }
+
+        /* ป้ายแจ้งเตือน ! */
+        .notif {
+            position: absolute;
+            top: 4%;
+            right: 8%;
+            width: calc(var(--u) * 4.4);
+            height: calc(var(--u) * 4.4);
+            border-radius: 50%;
+            background: #d62fa0;
+            color: #fff;
+            font-weight: 600;
+            font-size: calc(var(--u) * 2.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 calc(var(--u) * 0.4) #fff;
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* ---------- Guest Room (กรอบสี่เหลี่ยมหัวโค้ง) ---------- */
+        .btn-guest {
+            left: 61%;
+            top: 58%;
+            width: calc(var(--u) * 17);
+            height: calc(var(--u) * 23);
+            transform: translate(-50%, -50%);
+        }
+
+        .btn-guest:hover {
+            transform: translate(-50%, -50%) scale(1.07);
+        }
+
+        .guest-frame {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: calc(var(--u) * 0.9);
+            border-radius: 18% 18% 8% 8% / 12% 12% 6% 6%;
+            background: linear-gradient(160deg, #e9d9a6, #8c7a4c 40%, #d9c48c 70%, #8c7a4c);
+            box-shadow: 0 0 0 calc(var(--u) * 0.35) #3a321f, 0 calc(var(--u) * 1) calc(var(--u) * 2.5) rgba(0, 0, 0, 0.55);
+        }
+
+        .guest-frame .ornate-inner {
+            border-radius: inherit;
+            justify-content: space-between;
+            padding: calc(var(--u) * 1.4) 0;
+        }
+
+        .guest-frame .menu-title {
+            font-size: calc(var(--u) * 3);
+            color: #fff;
+            -webkit-text-stroke: 0;
+            text-shadow: 0 0 calc(var(--u) * 0.8) rgba(255, 255, 255, 0.5);
+        }
+
+        .guest-frame svg {
+            width: 40%;
+            color: #f4f1ea;
+        }
+
+        /* ---------- แบนเนอร์อีเวนต์ขวา ---------- */
+        .event-banner {
+            left: 78.5%;
+            top: 57%;
+            width: calc(var(--u) * 26);
+            height: calc(var(--u) * 15);
+            background: #fff;
+            padding: calc(var(--u) * 0.7);
+            box-sizing: border-box;
+            box-shadow: 0 0 0 calc(var(--u) * 0.3) #1a1a1e, 0 calc(var(--u) * 1) calc(var(--u) * 2) rgba(0, 0, 0, 0.5);
+        }
+
+        .event-banner:hover {
+            transform: scale(1.05);
+        }
+
+        .event-art {
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.35), transparent 40%),
+                linear-gradient(135deg, #1f2a6b, #5b2b8a 55%, #1e7f93);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .event-art::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.35) 50%, transparent 60%);
+            transform: translateX(-100%);
+            animation: shine 4s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+
+            0%,
+            60% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .event-art small {
+            font-size: calc(var(--u) * 1.7);
+            letter-spacing: 0.2em;
+            color: #cfe9ff;
+        }
+
+        .event-art strong {
+            font-family: 'Cinzel Decorative', var(--font-head);
+            font-size: calc(var(--u) * 3.2);
+            color: #ffe28a;
+            text-shadow: 0 2px 0 #7a2d8f, 0 0 8px rgba(255, 226, 138, 0.6);
+        }
+
+        .event-art span {
+            font-size: calc(var(--u) * 1.8);
+        }
+
+        /* ---------- แบนเนอร์สไลด์ซ้ายล่าง ---------- */
+        .carousel {
+            position: absolute;
+            left: 12%;
+            top: 79%;
+            width: calc(var(--u) * 54);
+            height: calc(var(--u) * 18);
+            z-index: 10;
+            background: rgba(10, 10, 12, 0.88);
+            box-shadow: 0 0 0 calc(var(--u) * 0.3) #555;
+            padding: calc(var(--u) * 0.9) calc(var(--u) * 0.9) calc(var(--u) * 2.8);
+            box-sizing: border-box;
+        }
+
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 calc(var(--u) * 3);
+            text-decoration: none;
+            color: #3a2f2a;
+            opacity: 0;
+            transform: translateX(8%);
+            transition: opacity 0.5s, transform 0.5s;
+            pointer-events: none;
+            background:
+                linear-gradient(90deg, #fbf7ef 45%, transparent 75%),
+                var(--slide-bg);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .slide-text {
+            text-align: center;
+            line-height: 1.15;
+        }
+
+        .slide-text small {
+            display: block;
+            font-size: calc(var(--u) * 1.6);
+            color: #8a7a5a;
+            letter-spacing: 0.15em;
+        }
+
+        .slide-text strong {
+            display: block;
+            font-family: var(--font-head);
+            font-size: calc(var(--u) * 3.2);
+            color: #3a2f2a;
+        }
+
+        .slide-text span {
+            display: inline-block;
+            margin-top: calc(var(--u) * 0.6);
+            font-size: calc(var(--u) * 1.9);
+            color: #b0306f;
+            font-weight: 600;
+        }
+
+        .slide-emblem {
+            font-family: 'Cinzel Decorative', var(--font-head);
+            font-size: calc(var(--u) * 8);
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 calc(var(--u) * 2) rgba(0, 0, 0, 0.4);
+        }
+
+        .car-arrow {
+            position: absolute;
+            top: 42%;
+            width: calc(var(--u) * 5);
+            height: calc(var(--u) * 5);
+            border-radius: 50%;
+            border: none;
+            background: radial-gradient(circle at 40% 35%, #fffdf6, var(--cream));
+            box-shadow: 0 0 0 calc(var(--u) * 0.35) var(--ring), 0 0 0 calc(var(--u) * 0.6) var(--ring-dark);
+            color: #2a2a2e;
+            font-size: calc(var(--u) * 2.4);
+            cursor: pointer;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: transform 0.2s;
+        }
+
+        .car-arrow:hover {
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .car-prev {
+            left: calc(var(--u) * -2.5);
+        }
+
+        .car-next {
+            right: calc(var(--u) * -2.5);
+        }
+
+        .car-dots {
+            position: absolute;
+            bottom: calc(var(--u) * 0.9);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: calc(var(--u) * 1);
+        }
+
+        .car-dots i {
+            width: calc(var(--u) * 0.9);
+            height: calc(var(--u) * 0.9);
+            border-radius: 50%;
+            background: #666;
+            transition: background 0.3s;
+        }
+
+        .car-dots i.on {
+            background: #fff;
+        }
+
+        /* ---------- แถบนำทางด้านล่าง ---------- */
+        .bottom-bar {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 49%;
+            height: calc(var(--u) * 6.5);
+            background: #0b0b0d;
+            clip-path: polygon(calc(var(--u) * 3) 0, 100% 0, 100% 100%, 0 100%);
+            z-index: 9;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            right: 7%;
+            bottom: calc(var(--u) * 0.8);
+            width: 41%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: calc(var(--u) * 0.6);
+            text-decoration: none;
+            color: #fff;
+            font-size: calc(var(--u) * 2.7);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            transition: transform 0.25s cubic-bezier(.3, 1.6, .5, 1);
+        }
+
+        .nav-item:hover {
+            transform: translateY(calc(var(--u) * -1));
+        }
+
+        .nav-item .nav-icon {
+            width: calc(var(--u) * 11.5);
+            height: calc(var(--u) * 11.5);
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #fffdf6, var(--cream) 60%, #e3dccb);
+            box-shadow:
+                0 0 0 calc(var(--u) * 0.45) #2a2a2e,
+                0 0 0 calc(var(--u) * 0.8) var(--ring),
+                0 calc(var(--u) * 0.6) calc(var(--u) * 1.5) rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #222;
+        }
+
+        .nav-item .nav-icon svg {
+            width: 58%;
+            height: 58%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-item:hover .nav-icon {
+            box-shadow:
+                0 0 0 calc(var(--u) * 0.45) #2a2a2e,
+                0 0 0 calc(var(--u) * 0.8) var(--pink),
+                0 0 calc(var(--u) * 2.5) rgba(243, 154, 208, 0.8);
+        }
+
+        .boost-tag {
+            position: absolute;
+            top: calc(var(--u) * -3.6);
+            left: 0;
+            white-space: nowrap;
+            background: #c21f8a;
+            color: #fff;
+            font-size: calc(var(--u) * 1.7);
+            padding: calc(var(--u) * 0.3) calc(var(--u) * 1);
+            border-radius: calc(var(--u) * 0.5);
+        }
+
+        /* ---------- เลื่อนลงมาเพื่อดูข้อมูล ---------- */
+        .scroll-indicator {
+            position: absolute;
+            bottom: calc(var(--u) * 1.5);
+            left: 4%;
+            z-index: 20;
+            font-size: calc(var(--u) * 2.2);
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-8px);
+            }
+
+            60% {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* กันไม่ให้ section ถูกบังตอนเลื่อนไปถึง + ไฮไลต์ตอนกดมาถึง */
+        .profile-section [id],
+        .profile-section {
+            scroll-margin-top: 30px;
+        }
+
+        .flash {
+            animation: flash 1.4s ease-out;
+        }
+
+        @keyframes flash {
+            0% {
+                box-shadow: 0 0 0 0 rgba(64, 224, 208, 0.9);
+            }
+
+            100% {
+                box-shadow: 0 0 0 24px rgba(64, 224, 208, 0);
+            }
+        }
+
+        /* ===== Color Wipe Transition (Staggered Layers) ===== */
+        #wipe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .wipe-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        #wipe-container.reset .wipe-layer {
+            transition: none !important;
+        }
+
+        .layer-1 {
+            background: #dcb365;
+            z-index: 1;
+        }
+
+        .layer-2 {
+            background: #ff55a3;
+            z-index: 2;
+        }
+
+        .layer-3 {
+            background: #40e0d0;
+            z-index: 3;
+        }
+
+        .layer-4 {
+            background: #08111f;
+            z-index: 4;
+        }
+
+        /* Enter State */
+        #wipe-container.active .wipe-layer {
+            transform: translateX(0);
+        }
+
+        #wipe-container.active .layer-1 {
+            transition-delay: 0s;
+        }
+
+        #wipe-container.active .layer-2 {
+            transition-delay: 0.1s;
+        }
+
+        #wipe-container.active .layer-3 {
+            transition-delay: 0.2s;
+        }
+
+        #wipe-container.active .layer-4 {
+            transition-delay: 0.3s;
+        }
+
+        /* Exit State */
+        #wipe-container.active.exit .wipe-layer {
+            transform: translateX(-100%);
+        }
+
+        #wipe-container.active.exit .layer-4 {
+            transition-delay: 0s;
+        }
+
+        #wipe-container.active.exit .layer-3 {
+            transition-delay: 0.1s;
+        }
+
+        #wipe-container.active.exit .layer-2 {
+            transition-delay: 0.2s;
+        }
+
+        #wipe-container.active.exit .layer-1 {
+            transition-delay: 0.3s;
+        }
+
+        /* Floating animations for items */
+        .float-1 {
+            animation: floaty 4s ease-in-out infinite;
+        }
+
+        .float-2 {
+            animation: floaty 5s ease-in-out infinite 1s;
+        }
+
+        .float-3 {
+            animation: floaty 3.5s ease-in-out infinite 0.5s;
+        }
+
+        /* =========================================
+           ส่วนที่ 2: Landing Page ข้อมูลตัวละคร
+           ========================================= */
+        .profile-page {
+            background-color: #d2d2d2;
+            background-image: url('assets/background.jpg');
+            background-size: 250px;
+            background-blend-mode: multiply;
+            color: #eee;
+            padding: 60px 20px;
+            font-family: var(--font-text);
+            position: relative;
+        }
+
+        .profile-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #0a0a0c;
+            background-image: url('assets/profile-pattern.jpg');
+            background-repeat: repeat;
+            background-size: 250px;
+            background-blend-mode: multiply;
+            border: 1px solid #4a3e26;
+            box-shadow: 0 0 0 4px #0a0a0c, 0 0 0 6px #dcb365;
+            overflow: hidden;
+            display: flex;
+            min-height: 650px;
+        }
+
+        .corner-dec {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            z-index: 10;
+        }
+
+        .corner-dec::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #dcb365;
+        }
+
+        .corner-tl {
+            top: 15px;
+            left: 15px;
+        }
+
+        .corner-tl::before {
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-tr {
+            top: 15px;
+            right: 15px;
+        }
+
+        .corner-tr::before {
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-bl {
+            bottom: 15px;
+            left: 15px;
+        }
+
+        .corner-bl::before {
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-br {
+            bottom: 15px;
+            right: 15px;
+        }
+
+        .corner-br::before {
+            border-left: none;
+            border-top: none;
+        }
+
+        .profile-left {
+            width: 55%;
+            padding: 60px 40px 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-crest {
+            width: 250px;
+            height: 140px;
+            margin: 0 auto 20px;
+            background: url('assets/crest.png') center / cover no-repeat;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.8));
+        }
+
+        .profile-name {
+            font-family: 'Cinzel Decorative', var(--font-head);
+            font-size: 3.5rem;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            font-weight: normal;
+            letter-spacing: 0.05em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .profile-subname {
+            color: #dcb365;
+            text-align: center;
+            font-size: 1.1rem;
+            letter-spacing: 0.3em;
+            margin-top: 5px;
+        }
+
+        .profile-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #555, transparent);
+            margin: 25px 0;
+        }
+
+        .profile-desc {
+            color: #ccc;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            margin: 0 0 30px;
+            text-align: justify;
+        }
+
+        .profile-meta {
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            padding: 12px 0;
+            color: #777;
+            font-size: 0.95rem;
+            letter-spacing: 0.08em;
+            text-align: center;
+        }
+
+        .profile-meta span {
+            color: #bbb;
+        }
+
+        @keyframes breathe-profile {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            50% {
+                transform: scaleY(1.015);
+            }
+        }
+
+        .profile-right {
+            position: absolute;
+            right: 2%;
+            bottom: 0;
+            width: 55%;
+            height: 110%;
+            z-index: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            animation: breathe-profile 5s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+
+        .profile-char {
+            height: 100%;
+            aspect-ratio: 1 / 1.5;
+            position: relative;
+        }
+
+        .profile-char::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('assets/kael.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom center;
+            filter: drop-shadow(-5px 5px 15px rgba(0, 0, 0, 0.8));
+            pointer-events: none;
+        }
+
+        .profile-quote {
+            position: absolute;
+            bottom: 60px;
+            right: 60px;
+            font-family: 'EkkamaiVibe-Heavy', var(--font-head);
+            font-size: 2.4rem;
+            color: #fff;
+            text-align: right;
+            z-index: 3;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 1);
+            line-height: 1.3;
+        }
+
+        .quote-audio {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #fffdf6, #dcb365 60%, #e3dccb);
+            color: #2a2a2e;
+            cursor: pointer;
+            margin-right: 15px;
+            vertical-align: middle;
+            transition: transform 0.2s;
+            box-shadow: 0 0 0 2px #624b27, 0 4px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .quote-audio:hover {
+            transform: scale(1.1);
+        }
+
+        .quote-audio svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            margin-left: 4px;
+        }
+
+        .dialogue-box {
+            position: absolute;
+            bottom: 12%;
+            left: 42%;
+            transform: translateX(-50%);
+            width: 70%;
+            max-width: 300px;
+            background: #fdfaf3;
+            border: 2px solid #dcb365;
+            border-radius: 12px;
+            padding: 30px 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(220, 179, 101, 0.2);
+            z-index: 10;
+            cursor: default;
+            transition: opacity 0.4s ease, transform 0.1s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .dialogue-box.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dialogue-box:active {
+            transform: translateX(-50%) scale(0.99);
+        }
+
+        .dialogue-box:active {
+            transform: translateX(-50%) scale(0.99);
+        }
+
+        .dialogue-name {
+            position: absolute;
+            top: -18px;
+            left: 30px;
+            background: #111;
+            color: #f4efdf;
+            font-family: 'Cinzel Decorative', var(--font-head);
+            font-size: 1.2rem;
+            padding: 6px 30px;
+            border: 2px solid #dcb365;
+            border-bottom: none;
+            clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+            letter-spacing: 0.1em;
+        }
+
+        .dialogue-text {
+            font-family: 'EkkamaiVibe-Heavy', var(--font-text);
+            font-size: 1.6rem;
+            color: #3b302a;
+            line-height: 1.6;
+            min-height: 3.2em;
+            text-align: left;
+            text-shadow: none;
+        }
+
+        .dialogue-indicator {
+            position: absolute;
+            bottom: 12px;
+            right: 20px;
+            color: #d62fa0;
+            animation: bounce-down 1.2s infinite;
+        }
+
+        @keyframes bounce-down {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        /* Adjustments for remaining sections */
+        .content-section {
+            max-width: 1000px;
+            margin: 60px auto 0;
+            background: #0f0f13;
+            padding: 40px;
+            border-radius: 8px;
+            border-top: 2px solid #3b3b4a;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .content-section h2 {
+            color: #dcb365;
+            font-family: 'Cinzel Decorative', var(--font-head);
+            border-bottom: 1px solid #dcb365;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .content-section ul {
+            padding-left: 20px;
+        }
+
+        .content-section li {
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .content-section strong {
+            color: #fff;
+        }
+
+        /* =========================================
+           ส่วนตกแต่ง Unique Magic: Miss a Beat (Storyboard 1, 2, 3 + Profile Theme)
+           ========================================= */
+        .magic-profile-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 60px auto 0;
+            background-color: #0a0a0c;
+            background-image: url('assets/profile-pattern.jpg');
+            background-repeat: repeat;
+            background-size: 250px;
+            background-blend-mode: multiply;
+            border: 1px solid #4a3e26;
+            box-shadow: 0 0 0 4px #0a0a0c, 0 0 0 6px #dcb365;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+            padding: 40px 30px;
+            box-sizing: border-box;
+            color: #eee;
+            font-family: var(--font-text);
+        }
+
+        /* Header with Octavinelle Crest */
+        .magic-header-crest-area {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 25px;
+        }
+
+        .magic-crest {
+            width: 250px;
+            height: 170px;
+            margin: 0 auto 10px;
+            background: url('assets/crest.png') center / contain no-repeat;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.85));
+            transition: transform 0.3s ease;
+        }
+
+        .magic-crest:hover {
+            transform: scale(1.03);
+        }
+
+        .magic-sec-title {
+            font-family: 'Cinzel Decorative', var(--font-head);
+            font-size: 3rem;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            font-weight: normal;
+            letter-spacing: 0.05em;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9), 0 0 25px rgba(179, 136, 255, 0.4);
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .magic-sec-subtitle {
+            color: #dcb365;
+            text-align: center;
+            font-size: 1.05rem;
+            letter-spacing: 0.25em;
+            margin-top: 4px;
+        }
+
+        .magic-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #555, transparent);
+            margin: 20px auto 10px;
+            max-width: 650px;
+        }
+
+        /* Storyboard Stage Main Container */
+        .storyboard-stage {
+            position: relative;
+            width: 100%;
+            min-height: 380px;
+            z-index: 2;
+        }
+
+        /* -----------------------------------------
+           STEP 1 & 2: Writing Stage (Storyboard 1 & 2)
+           ----------------------------------------- */
+        .stage-step-write {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 380px;
+            position: relative;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .storyboard-stage[data-state="3"] .stage-step-write {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Step 1: Pen Trigger with Pixel Cursor Prompt */
+        .step1-trigger-wrapper {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            user-select: none;
+        }
+
+        .storyboard-stage[data-state="2"] .step1-trigger-wrapper,
+        .storyboard-stage[data-state="3"] .step1-trigger-wrapper {
+            display: none;
+        }
+
+        .step1-trigger-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .step1-pen-graphic {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform: rotate(-18deg);
+            transition: transform 0.3s ease;
+        }
+
+        .step1-pen-graphic::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('assets/pen.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 15px rgba(179, 136, 255, 0.5));
+            transition: filter 0.3s ease;
+            pointer-events: none;
+        }
+
+        .step1-trigger-wrapper:hover .step1-pen-graphic {
+            transform: rotate(-10deg) scale(1.06);
+        }
+
+        .step1-trigger-wrapper:hover .step1-pen-graphic::after {
+            filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 25px rgba(220, 179, 101, 0.7));
+        }
+
+        .step1-pen-glow {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(179, 136, 255, 0.35) 0%, rgba(138, 43, 226, 0.1) 50%, transparent 70%);
+            animation: penPulseAura 2s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes penPulseAura {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1.2);
+                opacity: 0.9;
+            }
+        }
+
+        /* Pixel Cursor Guide (As depicted in Storyboard 1) */
+        .step1-cursor-guide {
+            position: absolute;
+            left: 55%;
+            top: 45%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            animation: cursorFloatBob 1.8s ease-in-out infinite;
+        }
+
+        @keyframes cursorFloatBob {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(8px, 8px);
+            }
+        }
+
+        .pixel-hand-cursor {
+            width: 44px;
+            height: 44px;
+            filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, 0.9));
+        }
+
+        .cursor-guide-text {
+            background: rgba(10, 8, 16, 0.92);
+            color: #dcb365;
+            border: 1px solid #dcb365;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+            white-space: nowrap;
+        }
+
+        /* Canvas & SVG Writing Container (Storyboard 2) */
+        .write-canvas-box {
+            position: relative;
+            width: 100%;
+            max-width: 820px;
+            height: 180px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        #magic-text-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Step 2 Stylus Follower */
+        .active-stylus-pen {
+            position: absolute;
+            width: 75px;
+            height: 150px;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transform: translate(-50%, -96%) rotate(22deg);
+            transform-origin: 50% 98%;
+            transition: opacity 0.3s ease;
+        }
+
+        .active-stylus-pen.visible {
+            opacity: 1;
+        }
+
+        .stylus-pen-img {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .stylus-pen-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('assets/pen.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(4px 8px 14px rgba(0, 0, 0, 0.95));
+            pointer-events: none;
+        }
+
+        .stylus-nib-pulse {
+            position: absolute;
+            left: 50%;
+            bottom: 2%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .stylus-ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            border: 2px solid #b388ff;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .active-stylus-pen.writing .ripple-a {
+            animation: stylusBeatRipple 1s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+        }
+
+        .active-stylus-pen.writing .ripple-b {
+            animation: stylusBeatRipple 1s cubic-bezier(0.1, 0.8, 0.3, 1) infinite 0.4s;
+        }
+
+        @keyframes stylusBeatRipple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                border-color: #dcb365;
+            }
+
+            100% {
+                width: 65px;
+                height: 65px;
+                opacity: 0;
+                border-color: #a855f7;
+            }
+        }
+
+        .stylus-equalizer-micro {
+            position: absolute;
+            left: 12px;
+            top: -12px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 16px;
+        }
+
+        .stylus-equalizer-micro span {
+            width: 3px;
+            height: 3px;
+            background: linear-gradient(to top, #dcb365, #b388ff);
+            border-radius: 1px;
+        }
+
+        .active-stylus-pen.writing .stylus-equalizer-micro span:nth-child(1) {
+            animation: microEq 0.35s infinite alternate;
+        }
+
+        .active-stylus-pen.writing .stylus-equalizer-micro span:nth-child(2) {
+            animation: microEq 0.45s infinite alternate 0.1s;
+        }
+
+        .active-stylus-pen.writing .stylus-equalizer-micro span:nth-child(3) {
+            animation: microEq 0.3s infinite alternate 0.05s;
+        }
+
+        .active-stylus-pen.writing .stylus-equalizer-micro span:nth-child(4) {
+            animation: microEq 0.4s infinite alternate 0.15s;
+        }
+
+        @keyframes microEq {
+            0% {
+                height: 2px;
+            }
+
+            100% {
+                height: 16px;
+            }
+        }
+
+        .step-guide-indicator {
+            margin-top: 15px;
+            color: #aaa;
+            font-size: 0.95rem;
+            letter-spacing: 0.08em;
+            text-align: center;
+        }
+
+        /* -----------------------------------------
+           STEP 3: Reveal Showcase (Storyboard 3)
+           ----------------------------------------- */
+        .stage-step-reveal {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 50px;
+            padding: 20px 20px 10px;
+            box-sizing: border-box;
+        }
+
+        .storyboard-stage[data-state="3"] .stage-step-reveal {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Left Side: Pen + 360 Radial Audio Equalizer (Storyboard 3) */
+        .reveal-pen-side {
+            flex: 0 0 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .radial-visualizer-system {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radial-eq-ring {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .radial-bar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3.5px;
+            height: 32px;
+            background: linear-gradient(to top, #7c3aed, #a855f7 50%, #e9d5ff 100%);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(168, 85, 247, 0.85);
+            transform-origin: bottom center;
+            animation: radialBarPulse 0.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes radialBarPulse {
+            0% {
+                transform: rotate(var(--angle)) translateY(-135px) scaleY(0.35);
+                opacity: 0.55;
+            }
+
+            50% {
+                transform: rotate(var(--angle)) translateY(-135px) scaleY(1.45);
+                opacity: 1;
+                filter: brightness(1.2);
+            }
+
+            100% {
+                transform: rotate(var(--angle)) translateY(-135px) scaleY(0.7);
+                opacity: 0.85;
+            }
+        }
+
+        .radial-eq-glow {
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, rgba(124, 58, 237, 0.15) 50%, transparent 75%);
+            animation: radialCorePulse 2s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes radialCorePulse {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        .radial-pen-holder {
+            position: relative;
+            z-index: 5;
+            animation: floatPenRadial 4s ease-in-out infinite;
+        }
+
+        @keyframes floatPenRadial {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(16deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(14deg);
+            }
+        }
+
+        .radial-pen-img {
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+        .radial-pen-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('assets/pen.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 20px rgba(179, 136, 255, 0.5));
+            pointer-events: none;
+        }
+
+        .btn-replay-magic {
+            margin-top: 50px;
+            background: rgba(20, 16, 28, 0.9);
+            color: #dcb365;
+            border: 1px solid #dcb365;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: var(--font-text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-replay-magic:hover {
+            background: #2a1f40;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(220, 179, 101, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Right Side: Miss a Beat Info (Storyboard 3) */
+        .reveal-info-side {
+            flex: 1;
+            text-align: left;
+        }
+
+        /* Paper Profile Card (Storyboard 3 Detail) */
+        .magic-paper-frame {
+            background-color: #fcf8ee;
+            border: 2px solid #c9b18a;
+            padding: 35px 40px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            color: #4a3e35;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .magic-paper-frame::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px solid rgba(201, 177, 138, 0.6);
+            pointer-events: none;
+        }
+
+        .magic-paper-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .magic-paper-title {
+            font-family: 'Cinzel Decorative', var(--font-head);
+            font-size: 2.8rem;
+            color: #2b221d;
+            margin: 0;
+            letter-spacing: 0.05em;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .magic-paper-sub {
+            color: #8c7355;
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .magic-paper-divider {
+            border-top: 1px solid #c9b18a;
+            border-bottom: 1px solid #c9b18a;
+            height: 3px;
+            margin: 20px 0;
+        }
+
+        .magic-detail-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .magic-detail-label {
+            flex: 0 0 130px;
+            text-align: right;
+            padding-right: 20px;
+            color: #b09467;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .magic-detail-value {
+            flex: 1;
+            color: #4a3e35;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .magic-paper-quote {
+            text-align: center;
+            font-family: 'EkkamaiVibe-Heavy', var(--font-text);
+            font-size: 1.5rem;
+            color: #2b221d;
+            margin-top: 30px;
+            line-height: 1.4;
+        }
+
+        /* Responsive layout for Mobile & Tablet screens */
+        @media (max-width: 900px) {
+            /* Homescreen */
+            #game-homescreen {
+                --u: min(1.4vh, 1.6vw);
+            }
+            .character-wrap {
+                left: 50%;
+                height: 85%;
+            }
+            
+            /* Move floating buttons slightly to fit better on narrow screens */
+            #btn-mail { top: 20% !important; left: 16% !important; }
+            #btn-present { top: 34% !important; left: 16% !important; }
+            #btn-tools { top: 48% !important; left: 16% !important; }
+            #btn-settings { top: 12% !important; left: 75% !important; }
+            #btn-fullscreen { top: 12% !important; left: 88% !important; }
+
+            .btn-exams {
+                right: -2% !important; 
+                top: 30% !important;
+                transform: scale(0.9) translate(-50%, -50%);
+            }
+
+            .name-plate {
+                bottom: calc(var(--u) * 32);
+            }
+
+            .bottom-nav {
+                right: 2%;
+                left: 2%;
+                justify-content: space-around;
+                bottom: calc(var(--u) * 2);
+            }
+            .nav-item {
+                font-size: 0.8rem;
+                width: auto;
+                min-width: 60px;
+            }
+            .nav-icon {
+                width: calc(var(--u) * 3);
+                height: calc(var(--u) * 3);
+            }
+
+            .dialogue-box {
+                left: 5%;
+                width: 90%;
+                bottom: calc(var(--u) * 16);
+                padding: calc(var(--u) * 3) calc(var(--u) * 4);
+                box-sizing: border-box;
+            }
+            .dialogue-text {
+                font-size: calc(var(--u) * 3.5);
+            }
+
+            /* Profile Page */
+            .profile-container {
+                min-height: auto;
+                padding-bottom: 50px;
+                flex-direction: column;
+            }
+            .profile-left {
+                width: 90%;
+                margin: 0 auto;
+                text-align: center;
+                padding-right: 0;
+                z-index: 5;
+                background: rgba(20, 20, 30, 0.7);
+                padding: 30px 20px;
+                border-radius: 12px;
+                backdrop-filter: blur(8px);
+                box-sizing: border-box;
+                margin-top: 320px; /* Space for character head */
+            }
+            .profile-crest {
+                margin: 0 auto 20px;
+            }
+            .profile-divider {
+                margin: 20px auto;
+            }
+            .profile-meta {
+                justify-content: center;
+            }
+            .profile-right {
+                width: 100%;
+                height: 400px;
+                top: 0;
+                right: 0;
+                opacity: 0.8;
+                z-index: 1;
+            }
+            .profile-quote {
+                bottom: auto;
+                top: 250px;
+                right: 50%;
+                transform: translateX(50%);
+                text-align: center;
+                font-size: 1.8rem;
+                width: 90%;
+            }
+            .quote-audio {
+                display: block;
+                margin: 0 auto 10px;
+            }
+
+            /* Magic Section */
+            .magic-inner-layout {
+                flex-direction: column;
+                min-height: auto;
+            }
+            .storyboard-stage {
+                padding-left: 0;
+                margin-top: 20px;
+            }
+            .stage-step-reveal {
+                flex-direction: column;
+                text-align: center;
+            }
+            .reveal-info-side {
+                text-align: center;
+                margin-top: 30px;
+            }
+            .radial-visualizer-system {
+                transform: scale(0.8);
+            }
+            
+            /* Magic Paper Frame for Mobile */
+            .magic-paper-frame {
+                padding: 25px 20px;
+            }
+            .magic-paper-title {
+                font-size: 2.2rem;
+            }
+            .magic-detail-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .magic-detail-label {
+                flex: none;
+                text-align: center;
+                padding-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            /* Background Trivia */
+            .content-section {
+                width: 90%;
+                padding: 30px 20px;
+                box-sizing: border-box;
+            }
+            #trivia li {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HERO SECTION (HOMESCREEN) ================= -->
+    <header id="game-homescreen">
+        <div class="hs-bg"></div>
+
+        <!-- รูปตัวละครตรงกลาง: วางไฟล์ PNG พื้นใสไว้ที่ assets/kael.png -->
+        <div class="character-wrap" id="character" onclick="showDialogue()">
+            <div class="character-sprite"></div>
+            <div class="character-fallback">วางรูปตัวละคร<br>assets/kael.png</div>
+        </div>
+
+        <!-- ป้ายชื่อ (แทน Rank / AP / เพชร) -->
+        <div class="name-plate">
+            <strong>Kael Selach</strong>
+            <span>Octavinelle · Year 2</span>
+        </div>
+
+        <!-- ปุ่มวงกลมขวาบน -->
+        <a href="#background" class="hs-btn circle-btn float-1" id="btn-settings" style="left:84.5%; top:9%;"
+            aria-label="Background">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3" />
+                <circle cx="12" cy="12" r="6.5" />
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1" />
+            </svg>
+            <span class="tip">ประวัติ</span>
+        </a>
+        <button type="button" class="hs-btn circle-btn float-2" id="btn-fullscreen"
+            style="left:92%; top:9%; border:none; padding:0;" aria-label="Fullscreen">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 10V4h6M4 4l6 6M20 14v6h-6M20 20l-6-6" />
+            </svg>
+            <span class="tip">เต็มจอ</span>
+        </button>
+
+        <!-- ปุ่มวงกลมซ้ายมือ -->
+        <a href="#quote" class="hs-btn circle-btn left-icon float-2" id="btn-mail" style="left:15%; top:26%;"
+            aria-label="Quote">
+            <svg viewBox="0 0 24 24">
+                <rect x="3" y="6" width="18" height="12" rx="1" />
+                <path d="m3 7 9 6 9-6" />
+            </svg>
+            <span class="tip">คำพูดประจำตัว</span>
+        </a>
+        <a href="#trivia" class="hs-btn circle-btn left-icon float-3" id="btn-present" style="left:15%; top:39%;"
+            aria-label="Likes">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 11h16v9H4zM3 8h18v3H3zM12 8v12M12 8C10 4 6 4.5 7 7.5M12 8c2-4 6-3.5 5-.5" />
+            </svg>
+            <span class="tip">สิ่งที่ชอบ / ไม่ชอบ</span>
+        </a>
+        <a href="#magic" class="hs-btn circle-btn left-icon float-1" id="btn-tools" style="left:15%; top:52%;"
+            aria-label="Magic">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M4 20 14 10M14 10l1.5-4.5L19 3l2 2-2.5 3.5L14 10M20 20l-8-8M7.5 4.5a3 3 0 0 0-3 3L7 10l3-3-2.5-2.5z" />
+            </svg>
+            <span class="tip">เวทมนตร์</span>
+        </a>
+
+        <!-- กรอบเมนูขวา -->
+        <a href="#profile" class="hs-btn ornate btn-lessons" id="btn-lessons">
+            <div class="ornate-frame">
+                <svg class="ornate-crown" viewBox="0 0 40 16">
+                    <path d="M3 15 5 5l6 5 4-8 5 7 5-7 4 8 6-5 2 10z" />
+                    <circle cx="20" cy="3" r="2" />
+                </svg>
+                <div class="ornate-inner">
+                    <span class="menu-title">Lessons</span>
+                    <span class="menu-icon"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7zM7 3a2 2 0 0 0-2 2v2h2M10 8h6M10 12h6M10 16h4" />
+                        </svg></span>
+                    <span class="menu-sub">โปรไฟล์</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#background" class="hs-btn ornate btn-stories" id="btn-stories">
+            <div class="ornate-frame">
+                <svg class="ornate-crown" viewBox="0 0 40 16">
+                    <path d="M3 15 5 5l6 5 4-8 5 7 5-7 4 8 6-5 2 10z" />
+                    <circle cx="20" cy="3" r="2" />
+                </svg>
+                <div class="ornate-inner">
+                    <span class="menu-title">Stories</span>
+                    <span class="menu-icon"><svg viewBox="0 0 24 24">
+                            <path d="M3 7c3-1 6-1 9 1 3-2 6-2 9-1v11c-3-1-6-1-9 1-3-2-6-2-9-1zM12 8v11M18 2l-4 7" />
+                        </svg></span>
+                    <span class="menu-sub">ประวัติ</span>
+                </div>
+            </div>
+            <span class="notif">!</span>
+        </a>
+
+        <a href="#portrait" class="hs-btn btn-guest float-2" id="btn-guest">
+            <div class="guest-frame">
+                <div class="ornate-inner">
+                    <span class="menu-title">Guest</span>
+                    <svg viewBox="0 0 24 24">
+                        <rect x="7" y="3" width="10" height="18" />
+                        <path d="M12 3v18M10.5 12h.01M13.5 12h.01M8.5 6h2M13.5 6h2" />
+                    </svg>
+                    <span class="menu-title">Room</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="#magic" class="hs-btn ornate btn-exams" id="btn-exams">
+            <div class="ornate-frame">
+                <svg class="ornate-crown" viewBox="0 0 40 16">
+                    <path d="M3 15 5 5l6 5 4-8 5 7 5-7 4 8 6-5 2 10z" />
+                    <circle cx="20" cy="3" r="2" />
+                </svg>
+                <div class="ornate-inner">
+                    <span class="menu-title">Exams</span>
+                    <span class="menu-icon" style="width:60%"><svg viewBox="0 0 24 24">
+                            <path
+                                d="M5 3v4a2 2 0 0 0 2 2l12 12M7 3v4M9 3v4a2 2 0 0 1-2 2M19 3v4a2 2 0 0 1-2 2L5 21M17 3v4M15 3v4a2 2 0 0 0 2 2" />
+                        </svg></span>
+                    <span class="menu-sub">เวท</span>
+                </div>
+            </div>
+        </a>
+
+
+
+        <!-- แถบนำทางด้านล่าง -->
+        <div class="dialogue-box" id="dialogue-homescreen">
+            <div class="dialogue-name">Kael Selach</div>
+            <div class="dialogue-text" id="dialogue-text">“เหห– มีคนอยู่ตรงนี้ด้วยเหรอ? โทษทีนะพอดีฉันไม่ทันเห็น”</div>
+            <div class="dialogue-indicator">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M7 10l5 5 5-5z" fill="currentColor" />
+                </svg>
+            </div>
+            <audio id="quote-audio-file" src="assets/voice1.mp3"></audio>
+        </div>
+
+        <div class="bottom-bar"></div>
+        <nav class="bottom-nav">
+            <a href="#profile" class="nav-item" id="nav-cards">
+                <span class="boost-tag">Profile</span>
+                <div class="nav-icon"><svg viewBox="0 0 24 24">
+                        <rect x="3.5" y="6" width="9" height="13" rx="1" transform="rotate(-10 8 12.5)" />
+                        <rect x="11.5" y="5" width="9" height="13" rx="1" transform="rotate(8 16 11.5)" />
+                    </svg></div>Cards
+            </a>
+            <a href="#magic" class="nav-item" id="nav-mirror">
+                <div class="nav-icon"><svg viewBox="0 0 24 24">
+                        <ellipse cx="12" cy="10" rx="5" ry="6.5" />
+                        <path d="M12 16.5V21M9 21h6M12 1.5v2M10 7.5l1.5-1.5" />
+                    </svg></div>Mirror
+            </a>
+            <a href="#quote" class="nav-item" id="nav-twistunes">
+                <div class="nav-icon"><svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9" />
+                        <circle cx="12" cy="12" r="2.5" />
+                        <path d="M12 6a6 6 0 0 1 6 6M17 3l3 3" />
+                    </svg></div>Twistunes
+            </a>
+            <a href="#trivia" class="nav-item" id="nav-missions">
+                <div class="nav-icon"><svg viewBox="0 0 24 24">
+                        <rect x="5" y="3" width="14" height="18" rx="1" />
+                        <path d="M8 8h8M8 12h8M8 16h5" />
+                    </svg></div>Missions
+            </a>
+            <a href="#background" class="nav-item" id="nav-shop">
+                <div class="nav-icon"><svg viewBox="0 0 24 24">
+                        <path d="M12 2v2M12 4l-8 8h16zM5 12v8h14v-8M10 20v-5h4v5" />
+                    </svg></div>Shop
+            </a>
+        </nav>
+
+        <div id="wipe-container">
+            <div class="wipe-layer layer-1"></div>
+            <div class="wipe-layer layer-2"></div>
+            <div class="wipe-layer layer-3"></div>
+            <div class="wipe-layer layer-4"></div>
+        </div>
+        <a href="#profile" class="scroll-indicator">▼ เลื่อนลงเพื่อดูข้อมูล</a>
+    </header>
+
+    <!-- ================= PROFILE SECTION (LANDING PAGE) ================= -->
+    <div class="profile-page" id="profile">
+
+        <div class="profile-container">
+            <div class="corner-dec corner-tl"></div>
+            <div class="corner-dec corner-tr"></div>
+            <div class="corner-dec corner-bl"></div>
+            <div class="corner-dec corner-br"></div>
+
+            <div class="profile-left">
+                <div class="profile-crest"></div>
+
+                <h1 class="profile-name">Kael Selach</h1>
+                <div class="profile-subname">เคล เซลัช</div>
+
+                <div class="profile-divider"></div>
+
+                <p class="profile-desc">
+                    นักเรียนชั้นปี 2 จากหอ Octavinelle เผ่าพันธุ์เงือกฉลามเสือแห่งทะเลปะการัง
+                    โตมากับการทำธุรกิจการค้าของครอบครัวทำให้มีนิสัยช่างเจรจาและให้ความสำคัญกับผลประโยชน์
+                    ภายนอกดูเป็นคนช่างสังเกต ขี้เบื่อ และมักจะมีท่าทีกวนๆ เสมอเวลาสบโอกาส
+                </p>
+
+                <div class="profile-meta">
+                    grade:<span>Sophomore</span> / birth:<span>06.07</span> / height:<span>189cm</span> /
+                    age:<span>17</span>
+                </div>
+            </div>
+
+            <div class="profile-right">
+                <div class="profile-char"></div>
+            </div>
+
+            <div class="profile-quote" id="quote">
+                <span class="quote-audio" onclick="document.getElementById('profile-quote-audio').play()"
+                    title="ฟังเสียง">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </span>
+                “เหห- มีคนอยู่ตรงนี้ด้วยเหรอ?<br>โทษทีนะพอดีฉันไม่ทันเห็น”
+                <audio id="profile-quote-audio" src="assets/kael-voice.mp3"></audio>
+            </div>
+        </div>
+
+        <!-- ================= MAGIC SECTION (STORYBOARD THEME: PROFILE PAGE & OCTAVINELLE CREST) ================= -->
+        <div class="profile-container magic-profile-container" id="magic">
+            <!-- 4 Corner Decorations matching Profile Page -->
+            <div class="corner-dec corner-tl"></div>
+            <div class="corner-dec corner-tr"></div>
+            <div class="corner-dec corner-bl"></div>
+            <div class="corner-dec corner-br"></div>
+
+            <div class="magic-inner-layout">
+                <!-- Octavinelle Crest Header -->
+                <div class="magic-header-crest-area">
+                    <div class="magic-crest"></div>
+                    <h2 class="magic-sec-title">Unique Magic</h2>
+                    <div class="magic-sec-subtitle">เวทมนตร์ประจำตัว · Octavinelle</div>
+                    <div class="magic-divider"></div>
+                </div>
+
+                <!-- Storyboard Stage Container -->
+                <div class="storyboard-stage" id="storyboard-stage" data-state="1">
+
+                    <!-- STEP 1 & 2: Interactive Pen & Writing Stage (Storyboard 1 & 2) -->
+                    <div class="stage-step-write" id="stage-step-write">
+
+                        <div class="step1-trigger-wrapper" id="step1-trigger-wrapper"
+                            title="คลิกเพื่อเริ่มเขียนเวทมนตร์">
+                            <div class="step1-pen-glow"></div>
+                            <div class="step1-pen-graphic"></div>
+                        </div>
+
+                        <!-- Canvas for Step 2 Writing "Miss a beat" -->
+                        <div class="write-canvas-box" id="write-canvas-box">
+                            <canvas id="magic-text-canvas"></canvas>
+                        </div>
+
+                        <!-- Step 2 Floating Pen that writes "Miss a beat" -->
+                        <div class="active-stylus-pen" id="active-stylus-pen">
+                            <div class="stylus-pen-img"></div>
+                            <div class="stylus-nib-pulse" id="stylus-nib-pulse">
+                                <div class="stylus-ripple ripple-a"></div>
+                                <div class="stylus-ripple ripple-b"></div>
+                                <div class="stylus-equalizer-micro">
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Reveal Stage with 360 Radial Audio Equalizer (Storyboard 3) -->
+                    <div class="stage-step-reveal" id="stage-step-reveal">
+
+                        <!-- Left Side: Pen + 360 Radial Equalizer Beat Ring -->
+                        <div class="reveal-pen-side">
+                            <div class="radial-visualizer-system" id="radial-visualizer-system">
+                                <!-- 360 degree radial audio equalizer bars (radiating in full circle around pen) -->
+                                <div class="radial-eq-ring" id="radial-eq-ring"></div>
+                                <div class="radial-eq-glow"></div>
+                                <div class="radial-pen-holder">
+                                    <div class="radial-pen-img"></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-replay-magic" id="btn-replay-magic"
+                                title="ร่ายเวทมนตร์อีกครั้ง">
+                                ↺ ร่ายเวทมนตร์ใหม่อีกครั้ง
+                            </button>
+                        </div>
+
+                        <!-- Right Side: Miss a beat title, quote & details -->
+                        <div class="reveal-info-side">
+                            <div class="magic-paper-frame">
+                                <div class="magic-paper-header">
+                                    <h1 class="magic-paper-title">Miss a beat</h1>
+                                    <div class="magic-paper-sub">คารมเพลี่ยงพล้ำ (Rhythm Disruption)</div>
+                                </div>
+
+                                <div class="magic-paper-divider"></div>
+
+                                <div class="magic-detail-row">
+                                    <div class="magic-detail-label">ลักษณะ</div>
+                                    <div class="magic-detail-value">เวทมนตร์ประเภทควบคุมจังหวะ
+                                        สามารถทำให้อีกฝ่ายชะงักและเสียจังหวะได้ในช่วงเวลาสั้นๆ
+                                        โดยมีเงื่อนไขว่าอีกฝ่ายต้องสบตากันก่อนถึงจะใช้เวทได้ เป็นเวทระยะใกล้ (2-5 เมตร)
+                                    </div>
+                                </div>
+
+                                <div class="magic-detail-row">
+                                    <div class="magic-detail-label">ผลของเวท</div>
+                                    <div class="magic-detail-value">ทำให้อีกฝ่ายรู้สึกวิตกกังวลชั่วขณะ
+                                        ชะงักและลนลานจนตัดสินใจพลาด (ระยะเวลาออกฤทธิ์สั้นมาก 1-3 วินาที)
+                                        หากเป้าหมายหลบสายตา หลับตา หรืออยู่ไกลเกิน 5 เมตร เวทจะไร้ผล</div>
+                                </div>
+
+                                <div class="magic-detail-row">
+                                    <div class="magic-detail-label">ข้อจำกัด</div>
+                                    <div class="magic-detail-value">ผู้ใช้จำเป็นต้องมีสมาธิ
+                                        และมีข้อจำกัดในการใช้ติดต่อกัน หากใช้ถี่เกินไปจะทำให้ปวดหัว คลื่นไส้</div>
+                                </div>
+
+                                <div class="magic-paper-divider"></div>
+
+                                <div class="magic-paper-quote">“ชั่วขณะที่หัวใจและลมหายใจหยุดชะงัก”</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ข้อมูล Background -->
+        <div class="content-section" id="background">
+            <h2>Background & Trivia</h2>
+            <ul id="trivia">
+                <li><strong>สิ่งที่ชอบ:</strong> หมากฝรั่ง, ของหวานทุกชนิด, หินรูปร่างแปลกๆ, เครื่องประดับ,
+                    ความลับของคนอื่น</li>
+                <li><strong>สิ่งที่ไม่ชอบ:</strong> การใส่เนคไท, คนที่ไม่มีเซ้นส์เรื่องเครื่องประดับ, การเสียผลประโยชน์
+                </li>
+                <li><strong>ความสามารถพิเศษ:</strong> ปีนหน้าผาจำลอง (Top Rope), ความจำดี, โฟกัสสิ่งต่างๆ
+                    ได้ในที่เสียงดัง</li>
+                <li><strong>เกร็ดเล็กน้อย:</strong> โตมากับธุรกิจของครอบครัว (พ่อเปิดประมูล แม่เปิดร้าน Noctiluca)
+                    สิ่งที่มีค่าที่สุดคือต่างหูไข่มุกเซาท์ซีสีดำรูปบวกผสมสมอเรือที่คุณแม่ให้</li>
+                <li>เนื่องจากเป็นเผ่าฉลาม ฟันสามารถงอกใหม่ได้ใน 1-2 วัน ตอนขึ้นบกแรกๆ ตกใจที่รู้ว่าฟันมนุษย์ขึ้นช้ามาก
+                </li>
+                <li>ในห้องค่อนข้างรก แต่เตียงโล่งเสมอเพราะนอนดิ้นจนของตกพื้นหมด</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        // เต็มจอ
+        document.getElementById('btn-fullscreen').addEventListener('click', () => {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+            else document.exitFullscreen?.();
+        });
+
+        // ไฮไลต์ส่วนที่กดไปถึง + Wipe Transition (Staggered Layers)
+        const wipe = document.getElementById('wipe-container');
+        document.querySelectorAll('#game-homescreen a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = a.getAttribute('href');
+                const t = document.querySelector(targetId);
+                if (!t) return;
+
+                // Reset สถานะ
+                wipe.classList.remove('exit', 'reset');
+
+                // เข้าสู่ Wipe (Slide In)
+                wipe.classList.add('active');
+
+                // รอให้ Layer 4 ปิดจอสนิท (0.3s delay + 0.5s transition = 0.8s)
+                setTimeout(() => {
+                    t.scrollIntoView({ behavior: 'instant' });
+                    t.classList.remove('flash');
+                    void t.offsetWidth;
+                    t.classList.add('flash');
+
+                    // ออกจาก Wipe (Slide Out)
+                    wipe.classList.add('exit');
+
+                    // รอจนออกไปพ้นจอทั้งหมด (0.3s delay + 0.5s transition = 0.8s)
+                    setTimeout(() => {
+                        wipe.classList.add('reset');
+                        wipe.classList.remove('active', 'exit');
+                        setTimeout(() => wipe.classList.remove('reset'), 50);
+                    }, 800);
+
+                }, 800);
+            });
+        });
+        // Dialogue System
+        const dialogues = [
+            { text: "“เหห– มีคนอยู่ตรงนี้ด้วยเหรอ? โทษทีนะพอดีฉันไม่ทันเห็น”", audio: "assets/voice1.mp3" },
+            { text: "“ถามว่าสิ่งที่มีค่าที่สุดสำหรับฉันคืออะไรเหรอ? ความลับของนายล่ะมั้ง ฮิฮิ”", audio: "assets/voice2.mp3" },
+            { text: "“ของทุกอย่างล้วนมีคุณค่าในตัวมันเองทั้งนั้น อย่าใช้เกณฑ์ของตัวเองมาตัดสินว่าสิ่งนั้นมันไร้ค่า”", audio: "assets/voice3.mp3" }
+        ];
+        let currentDialogue = -1;
+        let dialogueTimeout;
+
+        function showDialogue() {
+            currentDialogue = (currentDialogue + 1) % dialogues.length;
+            const box = document.getElementById('dialogue-homescreen');
+            const textElement = document.getElementById('dialogue-text');
+            const audioBox = document.getElementById('quote-audio-file');
+
+            clearTimeout(dialogueTimeout);
+
+            textElement.style.opacity = 0;
+
+            setTimeout(() => {
+                textElement.innerText = dialogues[currentDialogue].text;
+                textElement.style.opacity = 1;
+                audioBox.src = dialogues[currentDialogue].audio;
+
+                // Show box
+                box.classList.add('active');
+
+                // Play audio, catch error if file is dummy/missing
+                const playPromise = audioBox.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.log('Audio file placeholder triggered.'));
+                }
+
+                // Hide after 6 seconds
+                dialogueTimeout = setTimeout(() => {
+                    box.classList.remove('active');
+                    textElement.style.opacity = 0;
+                }, 6000);
+            }, 200);
+        }
+
+        // เพิ่ม CSS transition ให้ข้อความค่อยๆ เปลี่ยน
+        document.getElementById('dialogue-text').style.transition = 'opacity 0.2s';
+
+        // 3D Parallax Effect for Character
+        const charWrap = document.getElementById('character');
+        const charImg = charWrap.querySelector('.character-sprite');
+
+        charWrap.addEventListener('mousemove', (e) => {
+            const rect = charWrap.getBoundingClientRect();
+            // Calculate normalized mouse position (-1 to 1)
+            const x = (e.clientX - rect.left) / rect.width * 2 - 1;
+            const y = (e.clientY - rect.top) / rect.height * 2 - 1;
+
+            // Adjust sensitivity
+            const rotateX = y * -8; // Pitch
+            const rotateY = x * 10; // Yaw
+
+            charImg.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        charWrap.addEventListener('mouseleave', () => {
+            // Smooth reset when mouse leaves
+            charImg.style.transition = 'transform 0.5s ease-out';
+            charImg.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+
+            // Restore fast tracking transition after reset
+            setTimeout(() => {
+                charImg.style.transition = 'transform 0.1s ease-out';
+            }, 500);
+        });
+
+        charWrap.addEventListener('mouseenter', () => {
+            charImg.style.transition = 'transform 0.1s ease-out';
+        });
+
+        /* =========================================
+           Unique Magic : Miss a Beat - Storyboard 1, 2, 3 Script
+           ========================================= */
+        (function initStoryboardMagic() {
+            const stage = document.getElementById('storyboard-stage');
+            if (!stage) return;
+
+            const step1Trigger = document.getElementById('step1-trigger-wrapper');
+            const canvasBox = document.getElementById('write-canvas-box');
+            const canvas = document.getElementById('magic-text-canvas');
+            const stylusPen = document.getElementById('active-stylus-pen');
+            const indicator = document.getElementById('step-guide-indicator');
+            const radialRing = document.getElementById('radial-eq-ring');
+            const btnReplay = document.getElementById('btn-replay-magic');
+
+            const ctx = canvas.getContext('2d');
+            let currentState = 1;
+            let animationFrameId = null;
+
+            // Generate 360-degree radial equalizer bars (Storyboard 3)
+            function setupRadialEqualizer() {
+                if (!radialRing) return;
+                radialRing.innerHTML = '';
+                const totalBars = 48; // 48 bars around the circle
+                for (let i = 0; i < totalBars; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'radial-bar';
+                    const angle = (i / totalBars) * 360;
+                    bar.style.setProperty('--angle', angle + 'deg');
+                    bar.style.transform = `rotate(${angle}deg) translateY(-95px)`;
+                    // Varied frequency timing
+                    bar.style.animationDelay = `${(i % 12) * 0.08}s`;
+                    bar.style.animationDuration = `${0.6 + (i % 5) * 0.15}s`;
+                    radialRing.appendChild(bar);
+                }
+            }
+
+            setupRadialEqualizer();
+
+            // Resize canvas
+            function resizeCanvas() {
+                const rect = canvasBox.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                ctx.scale(dpr, dpr);
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Web Audio API Synthesizer
+            let audioCtx = null;
+            function playSound(freq, duration = 0.12, type = 'sine') {
+                try {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    if (!audioCtx && AudioContextClass) audioCtx = new AudioContextClass();
+                    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                    if (!audioCtx) return;
+
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(Math.max(40, freq * 0.3), audioCtx.currentTime + duration);
+
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration + 0.01);
+                } catch (e) { }
+            }
+
+            // Spawn floating musical notes
+            function spawnNote(x, y) {
+                const notes = ['♪', '♫', '♬', '♩', '✦'];
+                const note = document.createElement('span');
+                note.className = 'floating-note';
+                note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                note.style.left = (x - 10) + 'px';
+                note.style.top = (y - 15) + 'px';
+                note.style.setProperty('--rand-x', (Math.random() * 2 - 1).toFixed(2));
+                note.style.setProperty('--rand-r', (Math.random() * 2 - 1).toFixed(2));
+                canvasBox.appendChild(note);
+                setTimeout(() => note.remove(), 1200);
+            }
+
+            // Set ink style
+            function setInk() {
+                const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+                grad.addColorStop(0, '#dcb365');
+                grad.addColorStop(0.5, '#f7e7be');
+                grad.addColorStop(1, '#c084fc');
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 3.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.shadowColor = '#b388ff';
+                ctx.shadowBlur = 12;
+            }
+
+            // Start Step 2: Animated Writing of "Miss a beat"
+            function startWritingAnimation() {
+                currentState = 2;
+                stage.setAttribute('data-state', '2');
+                if (indicator) {
+                    indicator.innerHTML = '<span style="color:#dcb365;">(2)</span> ปากกาเวทมนตร์กำลังร่ายเซ็นชื่อ <strong>"Miss a beat"</strong>...';
+                }
+
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                setInk();
+
+                const rect = canvasBox.getBoundingClientRect();
+                const w = rect.width;
+                const h = rect.height;
+
+                // Path segments for "Miss a beat" + rhythm flourish
+                const strokes = [
+                    // 'M'
+                    [
+                        { x: 0.08, y: 0.65 }, { x: 0.09, y: 0.35 }, { x: 0.13, y: 0.62 },
+                        { x: 0.17, y: 0.36 }, { x: 0.20, y: 0.64 }
+                    ],
+                    // 'iss'
+                    [
+                        { x: 0.20, y: 0.64 }, { x: 0.23, y: 0.48 }, { x: 0.24, y: 0.64 },
+                        { x: 0.27, y: 0.50 }, { x: 0.29, y: 0.58 }, { x: 0.27, y: 0.64 },
+                        { x: 0.31, y: 0.50 }, { x: 0.33, y: 0.58 }, { x: 0.31, y: 0.64 },
+                        { x: 0.34, y: 0.60 }
+                    ],
+                    // dot for 'i'
+                    [
+                        { x: 0.235, y: 0.38 }, { x: 0.24, y: 0.38 }
+                    ],
+                    // 'a'
+                    [
+                        { x: 0.40, y: 0.54 }, { x: 0.38, y: 0.48 }, { x: 0.36, y: 0.54 },
+                        { x: 0.38, y: 0.64 }, { x: 0.41, y: 0.48 }, { x: 0.41, y: 0.64 },
+                        { x: 0.44, y: 0.60 }
+                    ],
+                    // 'b'
+                    [
+                        { x: 0.49, y: 0.32 }, { x: 0.48, y: 0.66 }, { x: 0.49, y: 0.52 },
+                        { x: 0.53, y: 0.50 }, { x: 0.54, y: 0.60 }, { x: 0.50, y: 0.66 },
+                        { x: 0.54, y: 0.60 }
+                    ],
+                    // 'eat'
+                    [
+                        { x: 0.54, y: 0.60 }, { x: 0.58, y: 0.50 }, { x: 0.57, y: 0.64 },
+                        { x: 0.62, y: 0.50 }, { x: 0.60, y: 0.58 }, { x: 0.62, y: 0.64 },
+                        { x: 0.66, y: 0.35 }, { x: 0.66, y: 0.64 }, { x: 0.70, y: 0.60 }
+                    ],
+                    // cross of 't'
+                    [
+                        { x: 0.63, y: 0.48 }, { x: 0.69, y: 0.48 }
+                    ],
+                    // Heartbeat flourish wave ("Miss a beat" rhythm)
+                    [
+                        { x: 0.08, y: 0.78 }, { x: 0.32, y: 0.78 },
+                        { x: 0.35, y: 0.78 }, { x: 0.37, y: 0.68 }, // P wave
+                        { x: 0.39, y: 0.78 }, { x: 0.41, y: 0.88 }, // Q dip
+                        { x: 0.43, y: 0.58 },                       // R spike (beat)
+                        { x: 0.46, y: 0.86 },                       // S dip
+                        { x: 0.49, y: 0.78 }, { x: 0.53, y: 0.70 }, // T wave
+                        { x: 0.57, y: 0.78 }, { x: 0.84, y: 0.78 }, // flat
+                        { x: 0.88, y: 0.74 }
+                    ]
+                ];
+
+                // Build points
+                const pts = [];
+                strokes.forEach(seg => {
+                    for (let i = 0; i < seg.length - 1; i++) {
+                        const p0 = seg[i];
+                        const p1 = seg[i + 1];
+                        const dist = Math.hypot((p1.x - p0.x) * w, (p1.y - p0.y) * h);
+                        const steps = Math.max(5, Math.ceil(dist / 3.8));
+                        for (let s = 0; s < steps; s++) {
+                            const t = s / steps;
+                            pts.push({
+                                x: (p0.x + (p1.x - p0.x) * t) * w,
+                                y: (p0.y + (p1.y - p0.y) * t) * h,
+                                isFirst: (i === 0 && s === 0)
+                            });
+                        }
+                    }
+                });
+
+                stylusPen.classList.add('visible', 'writing');
+
+                let index = 0;
+                let lastPoint = pts[0];
+
+                function drawFrame() {
+                    const speed = 1;
+                    for (let s = 0; s < speed; s++) {
+                        if (index >= pts.length) {
+                            // Writing completed!
+                            stylusPen.classList.remove('writing');
+                            setTimeout(() => {
+                                stylusPen.classList.remove('visible');
+                                goToStep3();
+                            }, 500);
+                            return;
+                        }
+
+                        const p = pts[index];
+                        stylusPen.style.left = p.x + 'px';
+                        stylusPen.style.top = p.y + 'px';
+
+                        if (!p.isFirst && lastPoint) {
+                            ctx.beginPath();
+                            ctx.moveTo(lastPoint.x, lastPoint.y);
+                            ctx.lineTo(p.x, p.y);
+                            ctx.stroke();
+                        }
+
+                        if (index % 14 === 0) {
+                            spawnNote(p.x, p.y);
+                            const isPulseSection = (index > pts.length * 0.7);
+                            playSound(isPulseSection ? 190 : 250, 0.1);
+                        }
+
+                        lastPoint = p;
+                        index++;
+                    }
+
+                    animationFrameId = requestAnimationFrame(drawFrame);
+                }
+
+                animationFrameId = requestAnimationFrame(drawFrame);
+            }
+
+            // Step 3: Reveal Stage (Storyboard 3)
+            function goToStep3() {
+                currentState = 3;
+                stage.setAttribute('data-state', '3');
+
+                // Magic chime sound
+                playSound(440, 0.15);
+                setTimeout(() => playSound(554, 0.15), 100);
+                setTimeout(() => playSound(659, 0.25), 200);
+            }
+
+            // Step 1: Click Trigger to Start
+            if (step1Trigger) {
+                step1Trigger.addEventListener('click', () => {
+                    startWritingAnimation();
+                });
+            }
+
+            // Replay Button
+            if (btnReplay) {
+                btnReplay.addEventListener('click', () => {
+                    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    stylusPen.classList.remove('visible', 'writing');
+                    currentState = 1;
+                    stage.setAttribute('data-state', '1');
+                    if (indicator) {
+                        indicator.innerHTML = '(1) คลิกที่ปากกาเวทมนตร์เพื่อเริ่มเขียนเวทมนตร์';
+                    }
+                });
+            }
+        })();
+    </script>
+    <div class="global-watermark"></div>
+</body>
+</html>
