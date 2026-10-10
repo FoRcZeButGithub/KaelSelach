@@ -2478,8 +2478,8 @@
 
             .name-plate {
                 position: absolute;
-                top: auto;
-                bottom: calc(var(--safe-bottom) + 145px);
+                top: calc(56px + var(--safe-top) + 12px);
+                bottom: auto;
                 left: 50%;
                 transform: translateX(-50%);
                 text-align: center;
@@ -2544,10 +2544,6 @@
 
 
             /* Hide desktop ornate buttons & circular buttons on mobile (accessible in drawer) */
-            .ornate.btn-lessons,
-            .ornate.btn-stories,
-            .ornate.btn-exams,
-            .btn-guest,
             #btn-mail,
             #btn-present,
             #btn-tools,
@@ -2555,6 +2551,42 @@
             #btn-fullscreen {
                 display: none !important;
             }
+
+            /* ปุ่มกรอบทอง 4 ปุ่มเรียงแถวด้านบน */
+            .hs-btn.ornate,
+            .hs-btn.btn-guest {
+                --bw: min(21vw, 92px);          /* ความกว้างต่อปุ่ม */
+                position: absolute;
+                top: calc(56px + var(--safe-top) + 78px);   /* ใต้ name-plate */
+                width: var(--bw);
+                height: calc(var(--bw) * 1.3);
+                transform: translateX(-50%);
+                animation: none;                /* กัน floaty ไปทับตำแหน่ง */
+                z-index: 15;
+            }
+
+            .btn-lessons { left: 14%; }
+            .btn-stories { left: 38%; }
+            .btn-exams   { left: 62%; }
+            .btn-guest   { left: 86%; }
+
+            .hs-btn.ornate:hover,
+            .hs-btn.btn-guest:hover {
+                transform: translateX(-50%) scale(1.05);
+            }
+
+            /* ย่อข้อความข้างในให้พอดีกรอบเล็ก */
+            .hs-btn .menu-title { font-size: clamp(.55rem, 2.6vw, .8rem); }
+            .hs-btn .menu-sub   { font-size: clamp(.45rem, 2vw, .6rem); }
+            .hs-btn .ornate-crown { top: -9px; }
+            .hs-btn .ornate-frame { padding: 4px; }
+            .hs-btn .ornate-inner { border-width: 2px; }
+            .hs-btn .menu-icon { width: 46%; margin: 3px 0 2px; }
+            .hs-btn .menu-icon::before,
+            .hs-btn .menu-icon::after { border-width: 1.5px; }
+            .btn-guest .ornate-inner { padding: 6px 0; }
+            .btn-guest .menu-title { font-size: clamp(.5rem, 2.4vw, .72rem); }
+            .notif { width: 16px; height: 16px; font-size: .6rem; }
 
             .scroll-indicator {
                 bottom: calc(var(--safe-bottom) + 60px);
@@ -2993,10 +3025,6 @@
         @media (max-width: 540px) {
             #game-homescreen {
                 --u: 2.2vw;
-            }
-
-            .name-plate {
-                bottom: calc(var(--safe-bottom) + 145px);
             }
 
             .name-plate strong {
