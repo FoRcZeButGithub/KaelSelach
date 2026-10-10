@@ -2472,6 +2472,7 @@
 
             .name-plate {
                 position: absolute;
+                top: auto;
                 bottom: calc(var(--safe-bottom) + 105px);
                 left: 50%;
                 transform: translateX(-50%);
@@ -2484,6 +2485,7 @@
                 backdrop-filter: blur(6px);
                 z-index: 15;
                 white-space: nowrap;
+                clip-path: none;
             }
 
             .name-plate strong {
@@ -3065,12 +3067,8 @@
                 <span class="drawer-link-num">III</span>
                 <span class="drawer-link-text"><span class="drawer-link-en">Unique Magic</span><span class="drawer-link-th">เวทมนตร์ประจำตัว</span></span>
             </a>
-            <a href="#memories" class="drawer-link" onclick="closeMobileNav()">
-                <span class="drawer-link-num">IV</span>
-                <span class="drawer-link-text"><span class="drawer-link-en">Memories</span><span class="drawer-link-th">ภาพความทรงจำ</span></span>
-            </a>
             <a href="#background" class="drawer-link" onclick="closeMobileNav()">
-                <span class="drawer-link-num">V</span>
+                <span class="drawer-link-num">IV</span>
                 <span class="drawer-link-text"><span class="drawer-link-en">Background & Trivia</span><span class="drawer-link-th">ประวัติและเกร็ด</span></span>
             </a>
         </nav>
@@ -3434,85 +3432,6 @@
                     </div>
 
                 </div>
-            </div>
-        </div>
-
-        <!-- ================= MEMORIES & MAP SECTION ================= -->
-        <div class="content-section memories-section" id="memories">
-            <h2 class="mobile-section-label">Octavinelle Memories</h2>
-            <div class="mobile-gallery-hint">✦ ปัดซ้าย-ขวา เพื่อดูภาพความทรงจำ หรือแตะเพื่อเปิดสมุดบันทึก ✦</div>
-
-            <!-- 3D Map Viewport (Desktop Only) -->
-            <div class="map-viewport-wrapper" id="desktopMapWrapper">
-                <div class="map-scale-container">
-                    <div class="map-base active" id="octavinelleMapBase">
-                        <div class="map-parchment-frame">
-                            <h3 class="map-title">OCTAVINELLE SEA ARCHIVE</h3>
-                            <p class="map-sub">Mostro Lounge · Coral Sea Trade Routes</p>
-                            <div class="map-compass">✦ N ✦</div>
-                            <div class="map-points">
-                                <div class="map-pin pin-1" onclick="openEnchantedBook(0)"><span>Mostro Lounge</span></div>
-                                <div class="map-pin pin-2" onclick="openEnchantedBook(1)"><span>Coral Sea Trade</span></div>
-                                <div class="map-pin pin-3" onclick="openEnchantedBook(2)"><span>Atlantica Border</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mobile Memory Carousel (Mobile Only: Scroll-Snap Swipeable) -->
-            <div class="mobile-memory-carousel" id="memoryCarousel" aria-label="ความทรงจำ">
-                <article class="memory-card">
-                    <button class="memory-card-btn" type="button" onclick="openEnchantedBook(0)" aria-label="เปิดสมุดบันทึก: Mostro Lounge Trader">
-                        <span class="memory-card-photo" style="background-image: url('assets/bg-lounge.jpg');">
-                            <span class="memory-card-plate">OCT-01</span>
-                        </span>
-                        <span class="memory-card-body">
-                            <span class="memory-card-title">Mostro Lounge Trader</span>
-                            <span class="memory-card-loc">Mostro Lounge · Octavinelle</span>
-                            <span class="memory-card-cta">📖 เปิดสมุดบันทึก</span>
-                        </span>
-                    </button>
-                </article>
-
-                <article class="memory-card">
-                    <button class="memory-card-btn" type="button" onclick="openEnchantedBook(1)" aria-label="เปิดสมุดบันทึก: Noctiluca Pearl Earring">
-                        <span class="memory-card-photo" style="background-image: url('assets/background.jpg');">
-                            <span class="memory-card-plate">OCT-02</span>
-                        </span>
-                        <span class="memory-card-body">
-                            <span class="memory-card-title">Noctiluca Pearl Earring</span>
-                            <span class="memory-card-loc">Coral Sea · Family Treasure</span>
-                            <span class="memory-card-cta">📖 เปิดสมุดบันทึก</span>
-                        </span>
-                    </button>
-                </article>
-
-                <article class="memory-card">
-                    <button class="memory-card-btn" type="button" onclick="openEnchantedBook(2)" aria-label="เปิดสมุดบันทึก: Tiger Shark Instinct">
-                        <span class="memory-card-photo" style="background-image: url('assets/bg-hall.jpg');">
-                            <span class="memory-card-plate">OCT-03</span>
-                        </span>
-                        <span class="memory-card-body">
-                            <span class="memory-card-title">Tiger Shark Instinct</span>
-                            <span class="memory-card-loc">Night Raven College · Training Grounds</span>
-                            <span class="memory-card-cta">📖 เปิดสมุดบันทึก</span>
-                        </span>
-                    </button>
-                </article>
-
-                <article class="memory-card">
-                    <button class="memory-card-btn" type="button" onclick="openEnchantedBook(3)" aria-label="เปิดสมุดบันทึก: Miss a beat">
-                        <span class="memory-card-photo" style="background-image: url('assets/profile-pattern.jpg');">
-                            <span class="memory-card-plate">OCT-04</span>
-                        </span>
-                        <span class="memory-card-body">
-                            <span class="memory-card-title">Miss a beat (คารมเพลี่ยงพล้ำ)</span>
-                            <span class="memory-card-loc">Unique Magic · Rhythm Control</span>
-                            <span class="memory-card-cta">📖 เปิดสมุดบันทึก</span>
-                        </span>
-                    </button>
-                </article>
             </div>
         </div>
 
