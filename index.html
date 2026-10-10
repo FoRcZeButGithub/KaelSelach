@@ -2141,6 +2141,87 @@
                 font-size: 0.95rem;
             }
         }
+
+        /* Portrait Narrow Mobile specific adjustments */
+        @media (max-width: 500px) {
+            #game-homescreen {
+                --u: 2vw; /* Use vw mostly so it scales with width */
+            }
+
+            .character-wrap {
+                left: 50%;
+                height: 75%;
+                bottom: 5%;
+            }
+
+            /* Adjust floating buttons for super narrow screen */
+            #btn-mail { top: 15% !important; left: 10% !important; transform: scale(0.85); }
+            #btn-present { top: 28% !important; left: 10% !important; transform: scale(0.85); }
+            #btn-tools { top: 41% !important; left: 10% !important; transform: scale(0.85); }
+            #btn-settings { top: 8% !important; left: 70% !important; transform: scale(0.85); }
+            #btn-fullscreen { top: 8% !important; left: 88% !important; transform: scale(0.85); }
+
+            .btn-exams {
+                transform: scale(0.65) translate(-50%, -50%);
+                top: 25% !important;
+                right: -10% !important;
+            }
+
+            .name-plate {
+                bottom: calc(var(--u) * 45);
+                left: 3%;
+            }
+            .name-plate strong {
+                font-size: calc(var(--u) * 4);
+            }
+
+            .bottom-nav {
+                flex-wrap: wrap; /* allow wrapping if needed */
+                bottom: calc(var(--u) * 3);
+            }
+            
+            .nav-item {
+                font-size: 0.75rem;
+                min-width: 50px;
+            }
+
+            .dialogue-box {
+                bottom: calc(var(--u) * 22);
+                padding: calc(var(--u) * 4);
+            }
+
+            /* Profile page portrait */
+            .profile-right {
+                height: 300px; /* shorter image */
+            }
+            .profile-left {
+                margin-top: 220px;
+                padding: 20px 10px;
+            }
+            .profile-quote {
+                top: 180px;
+                font-size: 1.4rem;
+            }
+
+            /* Magic page */
+            .magic-paper-title {
+                font-size: 1.8rem;
+            }
+            .magic-paper-sub {
+                font-size: 0.9rem;
+            }
+            .step1-pen-graphic {
+                width: 120px;
+                height: 120px;
+            }
+            .radial-pen-img {
+                width: 150px;
+                height: 150px;
+            }
+            .radial-visualizer-system {
+                transform: scale(0.65);
+            }
+        }
     </style>
 </head>
 
