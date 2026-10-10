@@ -124,10 +124,14 @@
         }
 
         .character-sprite {
-            height: 150%;
+            height: 145%;
             aspect-ratio: 1 / 1.5;
             position: relative;
             transition: transform 0.1s ease-out;
+            -webkit-user-drag: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         .character-sprite::after {
@@ -1165,6 +1169,10 @@
             height: 120%;
             aspect-ratio: 1 / 1.5;
             position: relative;
+            -webkit-user-drag: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         .profile-char::after {
@@ -2143,7 +2151,7 @@
         <div class="hs-bg"></div>
 
         <!-- รูปตัวละครตรงกลาง: วางไฟล์ PNG พื้นใสไว้ที่ assets/kael.png -->
-        <div class="character-wrap" id="character" onclick="showDialogue()">
+        <div class="character-wrap" id="character" onclick="showDialogue()" oncontextmenu="return false;">
             <div class="character-sprite"></div>
             <div class="character-fallback">วางรูปตัวละคร<br>assets/kael.png</div>
         </div>
@@ -2349,7 +2357,7 @@
                 </div>
             </div>
 
-            <div class="profile-right">
+            <div class="profile-right" oncontextmenu="return false;">
                 <div class="profile-char"></div>
             </div>
 
