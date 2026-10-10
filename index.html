@@ -2179,7 +2179,7 @@
            RESPONSIVE & ADAPTIVE SINGLE-PAGE ARCHITECTURE (<= 860px)
            TOUCH-FIRST EXPERIENCE & MOBILE PERFORMANCE OPTIMIZATION
            ========================================================================== */
-        @media (max-width: 860px) {
+        @media (max-width: 860px) and (orientation: portrait) {
 
             /* 1. Viewport & Safe-area Handling */
             html, body {
@@ -2555,24 +2555,23 @@
             /* ปุ่มกรอบทอง 4 ปุ่มเรียงแถวด้านบน */
             .hs-btn.ornate,
             .hs-btn.btn-guest {
-                --bw: min(21vw, 92px);          /* ความกว้างต่อปุ่ม */
+                --bw: min(21vw, 92px);
                 position: absolute;
-                top: calc(56px + var(--safe-top) + 78px);   /* ใต้ name-plate */
                 width: var(--bw);
                 height: calc(var(--bw) * 1.3);
-                transform: translateX(-50%);
-                animation: none;                /* กัน floaty ไปทับตำแหน่ง */
+                transform: translate(-50%, -50%);
+                animation: none !important;
                 z-index: 15;
             }
 
-            .btn-lessons { left: 14%; }
-            .btn-stories { left: 38%; }
-            .btn-exams   { left: 62%; }
-            .btn-guest   { left: 86%; }
+            .hs-btn.btn-lessons { left: 18%; top: 36%; }  /* บนซ้าย */
+            .hs-btn.btn-stories { left: 80%; top: 37%; }  /* บนขวา */
+            .hs-btn.btn-exams   { left: 13%; top: 63%; }  /* ล่างซ้าย */
+            .hs-btn.btn-guest   { left: 85%; top: 63%; }  /* ล่างขวา */
 
             .hs-btn.ornate:hover,
             .hs-btn.btn-guest:hover {
-                transform: translateX(-50%) scale(1.05);
+                transform: translate(-50%, -50%) scale(1.05);
             }
 
             /* ย่อข้อความข้างในให้พอดีกรอบเล็ก */
@@ -3022,7 +3021,7 @@
         /* ==========================================================================
            SECONDARY BREAKPOINT: COMPACT SMARTPHONES (<= 540px)
            ========================================================================== */
-        @media (max-width: 540px) {
+        @media (max-width: 540px) and (orientation: portrait) {
             #game-homescreen {
                 --u: 2.2vw;
             }
@@ -3332,7 +3331,7 @@
             <div class="wipe-layer layer-3"></div>
             <div class="wipe-layer layer-4"></div>
         </div>
-        <a href="#profile" class="scroll-indicator">▼ เลื่อนลงเพื่อดูข้อมูล</a>
+
     </header>
 
     <!-- ================= PROFILE SECTION (LANDING PAGE) ================= -->
@@ -3595,7 +3594,7 @@
         // เพิ่ม CSS transition ให้ข้อความค่อยๆ เปลี่ยน
         document.getElementById('dialogue-text').style.transition = 'opacity 0.2s';
 
-        if (window.matchMedia('(max-width: 860px)').matches) {
+        if (window.matchMedia('(max-width: 860px) and (orientation: portrait)').matches) {
             window.addEventListener('load', () => setTimeout(showDialogue, 900));
         }
 
